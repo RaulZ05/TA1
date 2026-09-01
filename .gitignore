@@ -1,0 +1,19 @@
+# Dependencias
+node_modules/
+
+# Artefactos de build
+dist/
+
+# Base de datos local y logs del servidor
+server/llampayec.db
+server/*.log
+*.log
+
+# Entorno y secretos (nunca subirlos)
+.env
+.env.*
+!.env.example
+
+# Sistema
+.DS_Store
+Thumbs.db

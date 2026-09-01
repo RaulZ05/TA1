@@ -1,0 +1,110 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build y Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Lint (ESLint + Stylelint)
+        run: npm run lint
+
+      - name: Build (frontend a dist/)
+        run: npm run build
+
+      - name: Subir artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  test:
+    name: Pruebas
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Ejecutar tests (node:test)
+        run: npm test
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Descargar frontend compilado
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Preparar llave SSH
+        env:
+          SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        run: |
+          install -m 600 -D /dev/null "$RUNNER_TEMP/deploy_key"
+          printf '%s\n' "$SSH_KEY" > "$RUNNER_TEMP/deploy_key"
+
+      - name: Sincronizar frontend (dist)
+        run: >
+          rsync -az --delete -e "ssh -i '$RUNNER_TEMP/deploy_key' -p '${{ secrets.SERVER_PORT || 22 }}' -o StrictHostKeyChecking=no"
+          ./dist/
+          ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.DEPLOY_PATH }}/dist/
+
+      - name: Sincronizar backend (server/)
+        run: >
+          rsync -az -e "ssh -i '$RUNNER_TEMP/deploy_key' -p '${{ secrets.SERVER_PORT || 22 }}' -o StrictHostKeyChecking=no"
+          --exclude node_modules --exclude '*.db' --exclude '*.log'
+          ./server/
+          ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.DEPLOY_PATH }}/server/
+
+      - name: Instalar dependencias y reiniciar servicio
+        env:
+          PORT: ${{ secrets.SERVER_PORT || 22 }}
+        run: >
+          ssh -i "$RUNNER_TEMP/deploy_key" -p "$PORT" -o StrictHostKeyChecking=no
+          ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}
+          "cd '${{ secrets.DEPLOY_PATH }}/server' &&
+           npm ci --omit=dev &&
+           (pm2 restart llampayec 2>/dev/null ||
+            (pm2 start index.js --name llampayec 2>/dev/null || echo 'Reinicia el servicio manualmente (pm2/systemd)'); true)"

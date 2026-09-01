@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Llampayec | Nuestra Historia</title>
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  .historia-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: center;
+    margin-bottom: 3rem;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+  }
+  .historia-row.reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .historia-row.reverse .historia-text { order: 2; }
+  .historia-row.reverse .historia-img { order: 1; }
+  .historia-text p {
+    font-size: 0.92rem;
+    color: var(--color-texto-claro);
+    line-height: 1.7;
+  }
+  .historia-img img {
+    border-radius: var(--radius-md);
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.4s var(--ease-out);
+  }
+  .historia-img img:hover {
+    transform: scale(1.02);
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo-group">
+    <div class="logo-badge">LL</div>
+    <span class="logo-text">Llampayec</span>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="Menú" onclick="toggleMobileNav()">
+    <span></span><span></span><span></span>
+  </button>
+  <nav class="main-nav">
+    <a href="index.html">INICIO</a>
+    <a href="productos.html">PRODUCTOS</a>
+    <a href="novedades.html">NOVEDADES</a>
+    <a href="historia.html" class="active">NUESTRA HISTORIA</a>
+    <a href="contacto.html">CONTACTO</a>
+  </nav>
+  <div class="header-icons">
+    <button class="icon-btn" onclick="toggleCartDrawer()" aria-label="Carrito">
+      🛒<span class="cart-badge">0</span>
+    </button>
+    <a href="perfil.html" class="icon-btn" aria-label="Perfil">👤</a>
+    <a href="#" class="icon-btn" aria-label="Salir">⏏</a>
+  </div>
+</header>
+
+<div class="overlay" onclick="closeCartDrawer()"></div>
+<aside class="cart-drawer">
+  <div class="cart-drawer-header">
+    <h4>Carrito de Compras</h4>
+    <button onclick="closeCartDrawer()" aria-label="Cerrar">✕</button>
+  </div>
+  <div class="cart-items"></div>
+  <div class="cart-drawer-footer" style="display:none;">
+    <div class="cart-total-row"><span>Total:</span><span class="cart-total-amount">S/0.00</span></div>
+    <a href="pago.html" class="btn btn-block">Proceder Pago</a>
+    <button class="btn btn-outline btn-block" onclick="closeCartDrawer()">Continuar Comprando</button>
+  </div>
+</aside>
+
+<main class="page-section">
+  <div class="historia-row">
+    <div class="historia-text">
+      <h2>Nuestra Historia</h2>
+      <p>Desde 1995, nuestra cafetería-panadería ha sido un lugar de encuentro donde la tradición artesanal se combina con el amor por lo hecho a mano. Cada día elaboramos nuestros productos con ingredientes seleccionados y técnicas tradicionales que han pasado de generación en generación. Nuestro compromiso es ofrecerte el mejor pan, los croissants más hojaldrados y las tartas más deliciosas de la ciudad.</p>
+    </div>
+    <div class="historia-img">
+      <img src="img/historia/equipo-panaderos.png" alt="Equipo de panaderos Llampayec">
+    </div>
+  </div>
+
+  <div class="historia-row reverse">
+    <div class="historia-img">
+      <img src="img/historia/postres-artesanales.png" alt="Postres artesanales Llampayec">
+    </div>
+    <div class="historia-text">
+      <h2>Nuestra Pasión</h2>
+      <p>La pasión por la panadería artesanal nos impulsa cada mañana. Utilizamos masa madre natural, harinas de primera calidad y mantequillas premium importadas directamente de Francia. Nuestro equipo de maestros panaderos trabaja durante la noche para que puedas disfrutar del pan recién horneado cada mañana. Esa es nuestra promesa y nuestro orgullo.</p>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-brand-top">
+        <div class="footer-logo">LL</div>
+        <span class="footer-brand-name">Llampayec</span>
+      </div>
+      <p class="footer-tagline">Tradición artesanal desde 1995. Cada día elaboramos nuestros productos con ingredientes seleccionados y el amor por lo hecho a mano.</p>
+      <div class="social-row">
+        <a href="https://facebook.com/llampayec" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.8c0-2.51 1.49-3.9 3.78-3.9 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.93h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94z"/></svg></a>
+        <a href="https://x.com/llampayec" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.3 8.34L23 22h-6.6l-5.17-6.77L5 22H2l7.8-8.92L1.5 2h6.7l4.66 6.2L18.9 2zm-2.3 18h1.83L7.5 4H5.55L16.6 20z"/></svg></a>
+        <a href="https://instagram.com/llampayec" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.74 3.74 0 0 1-1.38-.9 3.74 3.74 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.21 8.8 2.2 12 2.2zm0 1.8c-3.14 0-3.5.01-4.73.07-.96.04-1.48.2-1.82.34-.46.18-.78.39-1.13.73-.34.35-.55.67-.73 1.13-.14.34-.3.86-.34 1.82-.06 1.23-.07 1.59-.07 4.73s.01 3.5.07 4.73c.04.96.2 1.48.34 1.82.18.46.39.78.73 1.13.35.34.67.55 1.13.73.34.14.86.3 1.82.34 1.23.06 1.59.07 4.73.07s3.5-.01 4.73-.07c.96-.04 1.48-.2 1.82-.34.46-.18.78-.39 1.13-.73.34-.35.55-.67.73-1.13.14-.34.3-.86.34-1.82.06-1.23.07-1.59.07-4.73s-.01-3.5-.07-4.73c-.04-.96-.2-1.48-.34-1.82a3.02 3.02 0 0 0-.73-1.13 3.02 3.02 0 0 0-1.13-.73c-.34-.14-.86-.3-1.82-.34-1.23-.06-1.59-.07-4.73-.07zm0 4.06a5.94 5.94 0 1 1 0 11.88 5.94 5.94 0 0 1 0-11.88zm0 1.8a4.14 4.14 0 1 0 0 8.28 4.14 4.14 0 0 0 0-8.28zm6.4-3.6a1.4 1.4 0 1 1-2.8 0 1.4 1.4 0 0 1 2.8 0z"/></svg></a>
+        <a href="https://youtube.com/@llampayec" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 7.1s-.23-1.64-.94-2.36c-.9-.94-1.9-.95-2.37-1C16.9 3.5 12 3.5 12 3.5h-.01s-4.89 0-8.18.24c-.47.05-1.47.06-2.37 1-.71.72-.94 2.36-.94 2.36S0 9.03 0 10.96v1.81c0 1.93.23 3.86.23 3.86s.23 1.64.94 2.36c.9.94 2.08.91 2.61 1.01 1.9.18 8.22.24 8.22.24s4.9-.01 8.19-.25c.47-.05 1.47-.06 2.37-1 .71-.72.94-2.36.94-2.36s.23-1.93.23-3.86v-1.81c0-1.93-.23-3.86-.23-3.86zM9.55 14.96V8.7l6.27 3.14-6.27 3.12z"/></svg></a>
+        <a href="https://tiktok.com/@llampayec" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 2h-3.3v13.6c0 1.5-1.2 2.7-2.7 2.7s-2.7-1.2-2.7-2.7 1.2-2.7 2.7-2.7c.3 0 .6.05.85.13V9.6a6.1 6.1 0 0 0-.85-.06c-3.35 0-6.07 2.72-6.07 6.07S7.25 21.68 10.6 21.68s6.07-2.72 6.07-6.07V8.3a8.1 8.1 0 0 0 4.73 1.5V6.5c-1.97 0-3.7-1.1-4.6-2.72-.4-.7-.2-1.78-.2-1.78z"/></svg></a>
+      </div>
+    </div>
+
+    <div class="footer-map-col">
+      <h4>Encuéntranos</h4>
+      <div class="footer-map">
+        <img src="img/contacto/ubicacion-mapa.png" alt="Mapa de ubicación Lambayeque">
+      </div>
+      <p class="footer-address">📍 Av. Ramón Castilla Nro 443, Ct Centro, Lambayeque</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <div class="footer-contact-info">
+        <p>📞 (044) 123 - 4567</p>
+        <p>📱 +51 943 072 046</p>
+        <p>✉️ contacto@llampayec.com</p>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Horarios</h4>
+      <div class="footer-hours-box">
+        <p><span class="day">Lun - Sáb</span><span>7:00 AM - 9:00 PM</span></p>
+        <p><span class="day">Domingo</span><span>8:00 AM - 1:00 PM</span></p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2024 Llampayec. Todos los derechos reservados.</p>
+    <div class="footer-bottom-links">
+      <a href="#">Política de privacidad</a>
+      <a href="#">Términos y condiciones</a>
+      <a href="#">Libro de reclamaciones</a>
+    </div>
+  </div>
+</footer>
+
+<div class="detail-overlay" id="detail-overlay" onclick="closeProductDetail(event)">
+  <div class="detail-modal" id="detail-modal">
+    <img class="detail-modal-img" id="detail-img" src="" alt="">
+    <div class="detail-modal-body">
+      <h2 id="detail-name"></h2>
+      <span class="detail-modal-price" id="detail-price"></span>
+      <p class="detail-modal-desc" id="detail-desc"></p>
+      <h4>🧾 Ingredientes</h4>
+      <ul class="detail-ingredients" id="detail-ingredients"></ul>
+    </div>
+    <div class="detail-modal-actions">
+      <button class="btn" id="detail-cart-btn">🛒 Agregar al carrito</button>
+      <button class="detail-modal-close" onclick="closeProductDetail()">✕ Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script>
+  initHeaderGlass();
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('reveal');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.historia-row').forEach(row => observer.observe(row));
+</script>
+</body>
+</html>
