@@ -47,6 +47,8 @@ test('register crea un usuario y devuelve token', async () => {
   assert.ok(data.token, 'Debe devolver JWT');
   assert.strictEqual(data.user.email, 'pepe@test.com');
   assert.strictEqual(data.user.password, undefined, 'No debe exponer el hash');
+
+  
 });
 
 test('register rechaza email duplicado (409)', async () => {
