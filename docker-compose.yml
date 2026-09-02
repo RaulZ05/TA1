@@ -1,0 +1,24 @@
+# ============================================================================
+#  LLAMPAYEC - Orquestación con Docker Compose
+#  Uso:  docker compose up -d --build
+#  App:  http://localhost:8080   (mapeado al puerto 3000 interno del contenedor)
+#  La base de datos SQLite persiste en el volumen "llampayec_data".
+# ============================================================================
+services:
+  llampayec:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: llampayec:latest
+    container_name: llampayec
+    restart: unless-stopped
+    ports:
+      - "8080:3000"
+    environment:
+      # Se puede sobreescribir con: JWT_SECRET=mi_secreto docker compose up -d
+      JWT_SECRET: ${JWT_SECRET:-llampayec_secret_prod_2024}
+    volumes:
+      - llampayec_data:/app/data
+
+volumes:
+  llampayec_data:

@@ -1,0 +1,22 @@
+# Dependencias
+node_modules/
+**/node_modules
+server/node_modules/
+
+# Artefactos de build (se generan dentro de la imagen)
+dist/
+
+# Bases de datos locales y logs
+*.db
+*.log
+
+# Contro de versiones / IDE / docs
+.git
+.github
+.gitignore
+*.md
+.vscode
+.idea
+
+# Archivos temporales
+tests/

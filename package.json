@@ -13,7 +13,10 @@
     "lint:css": "stylelint \"css/**/*.css\"",
     "test": "node --test tests/",
     "start": "npm --prefix server run start",
-    "seed": "npm --prefix server run seed"
+    "seed": "npm --prefix server run seed",
+    "docker:build": "docker build -t llampayec .",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down"
   },
   "devDependencies": {
     "@eslint/js": "^9.16.0",

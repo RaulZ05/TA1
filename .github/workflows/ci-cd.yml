@@ -62,6 +62,33 @@ jobs:
       - name: Ejecutar tests (node:test)
         run: npm test
 
+  docker:
+    name: Docker (imagen + smoke test en contenedor)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build de la imagen
+        run: docker build -t llampayec:ci .
+
+      - name: Ejecutar contenedor y verificar
+        run: |
+          docker run -d --name llampayec-ci -e PORT=3000 -p 3100:3000 llampayec:ci
+          for i in $(seq 1 60); do
+            curl -sf -o /dev/null "http://127.0.0.1:3100/api/products" && break
+            sleep 2
+          done
+          CODE_HOME="$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:3100/")"
+          CODE_API="$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:3100/api/products")"
+          LOGIN="$(curl -s -X POST "http://127.0.0.1:3100/api/auth/login" -H 'Content-Type: application/json' -d '{"email":"admin@llampayec.com","password":"admin123"}')"
+          echo "HOME=$CODE_HOME API=$CODE_API LOGIN=$(echo "$LOGIN" | grep -q '"token"' && echo OK || echo FAIL)"
+          docker logs llampayec-ci 2>&1 | head -6 || true
+          docker rm -f llampayec-ci >/dev/null || true
+          [ "$CODE_HOME" = "200" ] && [ "$CODE_API" = "200" ] && echo "$LOGIN" | grep -q '"token"' \
+            || { echo "::error::Fallo en la integración Docker"; exit 1; }
+          echo "✅ Imagen Docker verificada: frontend, API y login operativos en el contenedor"
+
   deploy:
     name: Deploy (puesta en producción verificada)
     runs-on: ubuntu-latest
