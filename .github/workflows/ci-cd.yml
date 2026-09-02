@@ -79,11 +79,19 @@ jobs:
           path: dist
 
       - name: Validar secrets de deploy
-        if: ${{ !secrets.SERVER_HOST || !secrets.SERVER_USER || !secrets.SERVER_SSH_KEY }}
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
         run: |
-          echo "::error::Faltan secrets de deploy. Créalos en Settings > Secrets and variables > Actions: SERVER_HOST, SERVER_USER y SERVER_SSH_KEY (SERVER_PORT y DEPLOY_PATH son opcionales)."
-          echo "::error::Valor vacío detectado en: ${{ secrets.SERVER_HOST == '' && 'SERVER_HOST' || '' }}${{ secrets.SERVER_USER == '' && ' SERVER_USER' || '' }}${{ secrets.SERVER_SSH_KEY == '' && ' SERVER_SSH_KEY' || '' }}"
-          exit 1
+          MISSING=""
+          [ -z "$SERVER_HOST" ] && MISSING="$MISSING SERVER_HOST"
+          [ -z "$SERVER_USER" ] && MISSING="$MISSING SERVER_USER"
+          [ -z "$SERVER_SSH_KEY" ] && MISSING="$MISSING SERVER_SSH_KEY"
+          if [ -n "$MISSING" ]; then
+            echo "::error::Faltan secrets de deploy (créalos en Settings > Secrets and variables > Actions):$MISSING"
+            exit 1
+          fi
 
       - name: Preparar llave SSH
         env:
